@@ -7,8 +7,8 @@ from django.contrib.auth import login
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .forms import BookingForm
-from .models import Event, Booking
+from .forms import BookingForm, FeedbackForm
+from .models import Event, Booking, Feedback
 
 
 def register(request):
@@ -88,3 +88,18 @@ def previous_events(request):
         'filter_type': filter_type,
     }
     return render(request, 'events/previous_events.html', context)
+
+@login_required
+def feedback(request):
+    if request.method == "POST":
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            fb = form.save(commit=False)
+            fb.user = request.user
+            fb.save()
+            return redirect("feedback")
+    else:
+        form = FeedbackForm()
+
+    feedbacks = Feedback.objects.all().order_by("-created_at")
+    return render(request, "events/feedback.html", {"form": form, "feedbacks": feedbacks})

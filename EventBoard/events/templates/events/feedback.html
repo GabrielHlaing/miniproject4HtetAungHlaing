@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Feedback</h2>
+<form method="POST" id="feedback-form">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label class="form-label">Rating:</label>
+    <div id="star-container">
+      {% for i in "12345" %}
+        <span class="star" data-value="{{ forloop.counter }}">&#9734;</span>
+      {% endfor %}
+    </div>
+    {{ form.rating }}
+  </div>
+
+  <div class="mb-3">
+    {{ form.comment.label_tag }}
+    {{ form.comment }}
+  </div>
+
+  <button type="submit">Submit Feedback</button>
+</form>
+
+<hr>
+
+<h3>Previous Feedback</h3>
+<ul>
+  {% for fb in feedbacks %}
+    <li>{{ fb.user.username }} — {{ fb.rating }}⭐: {{ fb.comment }}</li>
+  {% empty %}
+    <li>No feedback yet.</li>
+  {% endfor %}
+</ul>
+
+<style>
+  #star-container {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+  }
+  .star.filled {
+    color: gold;
+  }
+</style>
+
+<script>
+  const stars = document.querySelectorAll(".star");
+  const ratingInput = document.querySelector("#id_rating");
+
+  stars.forEach(star => {
+    star.addEventListener("click", () => {
+      const value = star.getAttribute("data-value");
+      ratingInput.value = value;
+      stars.forEach(s => s.classList.toggle("filled", s.getAttribute("data-value") <= value));
+    });
+  });
+</script>
+
+{% endblock %}
