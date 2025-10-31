@@ -1,0 +1,24 @@
+<h2>Previous Events</h2>
+
+<div>
+  <form method="get">
+    <select name="filter" onchange="this.form.submit()">
+      <option value="7days" {% if filter_type == '7days' %}selected{% endif %}>Last 7 days</option>
+      <option value="1month" {% if filter_type == '1month' %}selected{% endif %}>Last 1 month</option>
+      <option value="3months" {% if filter_type == '3months' %}selected{% endif %}>Last 3 months</option>
+      <option value="older" {% if filter_type == 'older' %}selected{% endif %}>More than 3 months</option>
+    </select>
+  </form>
+</div>
+
+{% if events %}
+  <ul>
+    {% for event in events %}
+      <li>
+        <strong>{{ event.title }}</strong> — {{ event.date }}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No previous events found for this period.</p>
+{% endif %}

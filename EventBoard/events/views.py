@@ -65,3 +65,26 @@ def cancel_booking(request, booking_id):
 
     return render(request, 'events/confirm_cancel.html', {'booking': booking})
 
+def previous_events(request):
+    today = timezone.now().date()
+    filter_type = request.GET.get('filter', '7days')
+
+    if filter_type == '7days':
+        start_date = today - timedelta(days=7)
+    elif filter_type == '1month':
+        start_date = today - timedelta(days=30)
+    elif filter_type == '3months':
+        start_date = today - timedelta(days=90)
+    else:
+        start_date = None  # For > 3 months
+
+    if start_date:
+        events = Event.objects.filter(date__lt=today, date__gte=start_date)
+    else:
+        events = Event.objects.filter(date__lt=today - timedelta(days=90))
+
+    context = {
+        'events': events.order_by('-date'),
+        'filter_type': filter_type,
+    }
+    return render(request, 'events/previous_events.html', context)
