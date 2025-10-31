@@ -1,14 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2>Upcoming Events</h2>
-  <ul>
-    {% for event in events %}
-      <li>
-        <strong>{{ event.name }}</strong> - {{ event.date }}<br>
-        {{ event.description }}
-      </li>
-    {% empty %}
-      <li>No events available right now.</li>
-    {% endfor %}
-  </ul>
+    <h2>Upcoming Events</h2>
+    <ul>
+        {% for event in events %}
+            <li>
+                <strong>{{ event.name }}</strong> - {{ event.date }}<br>
+                {{ event.description }}
+                {% if user.is_authenticated %}
+                    {% if event.available_seats > 0 %}
+                        <form action="{% url 'events:book_event' event.id %}" method="get">
+                            <button type="submit">Book</button>
+                        </form>
+                    {% else %}
+                        <p style="color:red;">Fully Booked</p>
+                    {% endif %}
+                {% else %}
+                    <p><a href="{% url 'login' %}">Login to book</a></p>
+                {% endif %}
+
+            </li>
+        {% empty %}
+            <li>No events available right now.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

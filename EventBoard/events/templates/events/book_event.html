@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Book: {{ event.name }}</h2>
+  <p>Date: {{ event.date }}</p>
+  <p>Available Seats: {{ event.available_seats }}</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Confirm Booking</button>
+  </form>
+
+  <a href="{% url 'events:index' %}">Back to Events</a>
+{% endblock %}
