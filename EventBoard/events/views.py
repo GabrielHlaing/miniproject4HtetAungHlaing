@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 
 from .forms import BookingForm
 from .models import Event, Booking
@@ -43,4 +46,22 @@ def book_event(request, event_id):
         form = BookingForm()
 
     return render(request, 'events/book_event.html', {'event': event, 'form': form})
+
+@login_required
+def my_bookings(request):
+    bookings = request.user.booking_set.select_related('event').order_by('-booking_date')
+    return render(request, 'events/my_bookings.html', {'bookings': bookings})
+
+@login_required
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+
+    if request.method == 'POST':
+        event = booking.event
+        event.save()
+        booking.delete()
+        messages.success(request, "Your booking has been canceled!")
+        return redirect('events:my_bookings')
+
+    return render(request, 'events/confirm_cancel.html', {'booking': booking})
 

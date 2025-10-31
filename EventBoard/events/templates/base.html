@@ -15,6 +15,7 @@
           <ul class="navbar-nav ms-auto">
             {% if user.is_authenticated %}
               <li class="nav-item"><a class="nav-link" href="#">{{ user.username }}</a></li>
+                <li class="nav-item"><a href="{% url 'events:my_bookings' %}">My Bookings</a></li>
               <li ><form method="post" action="{% url 'logout' %}" style="display:inline;">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-link p-0 m-0 align-baseline">Logout</button>

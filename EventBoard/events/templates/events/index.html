@@ -4,7 +4,7 @@
     <ul>
         {% for event in events %}
             <li>
-                <strong>{{ event.name }}</strong> - {{ event.date }}<br>
+                <strong>{{ event.title }}</strong> - {{ event.date }}<br>
                 {{ event.description }}
                 {% if user.is_authenticated %}
                     {% if event.available_seats > 0 %}
