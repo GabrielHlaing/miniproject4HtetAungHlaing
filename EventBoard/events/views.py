@@ -1,18 +1,18 @@
-from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from django.shortcuts import render, redirect
-from django.contrib import messages
+
 
 def register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Account created. Please log in.")
-            return redirect('login')
+            user = form.save()
+            login(request, user)
+            return redirect("events:index")   # go to home after sign up
     else:
         form = UserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, "registration/register.html", {"form": form})
 
 
 def index(request):
