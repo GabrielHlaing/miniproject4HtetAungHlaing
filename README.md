@@ -20,6 +20,7 @@ The app uses **Bootstrap 5** for a clean and responsive interface, including mod
 ```
 pip install -r requirements.txt
 ```
+* Set settings file location in the Django configuration. By default, it is `mysite\settings.py`
 
 ### Database Setup
 * Create and apply database migrations using:
@@ -35,6 +36,7 @@ python manage.py migrate
 ```
 python manage.py createsuperuser
 ```
+* Then set up admin account by entering name, email, and password.
 
 ### Running the Server
 * Start the Django development server with:
@@ -44,7 +46,7 @@ python manage.py runserver
 * Then open your browser and visit:
 http://127.0.0.1:8000/
 * To access admin panel, open:
-http://127.0.0.1:8000/admin
+http://127.0.0.1:8000/admin and login using the created name and password.
 
 
 ## Features
@@ -56,7 +58,7 @@ http://127.0.0.1:8000/admin
 * Feedback form with interactive star rating system
 * Django admin panel for event and user management
 * Flash message system for user feedback (success/error)
-* Responsive Bootstrap 5 design with sticky footer
+* Responsive Bootstrap 5 design
 
 ## Authors
 * Htet Aung Hlaing
@@ -68,7 +70,7 @@ http://127.0.0.1:8000/admin
     * Bootstrap 5 responsive layout integrated
 
 ## Acknowledgments
-* Django Documentation - https://docs.djangoproject.com/en/stable/
-* Bootstrap 5 - https://getbootstrap.com/
-* SQLite - https://www.sqlite.org/
-* MDN Django Tutorial - https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django
+* [Django Documentation](https://docs.djangoproject.com/en/5.2/)
+* [Bootstrap 5](https://getbootstrap.com/)
+* [SQLite](https://www.sqlite.org/)
+* [Django Tutorial](https://docs.djangoproject.com/en/5.2/intro/tutorial01/)
