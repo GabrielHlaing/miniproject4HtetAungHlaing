@@ -27,25 +27,38 @@ def index(request):
     return render(request, 'events/index.html', {'events': events})
 
 @login_required
-def book_event(request, event_id):
+def event_detail(request, event_id):
     event = get_object_or_404(Event, id=event_id)
+    now = timezone.now()
 
-    if request.method == 'POST':
+    # Determine if booking is still allowed
+    event_datetime = timezone.make_aware(
+        timezone.datetime.combine(event.date, event.time)
+    )
+    booking_allowed = now < event_datetime
+
+    if request.method == 'POST' and booking_allowed:
         form = BookingForm(request.POST)
         if form.is_valid():
             seats = form.cleaned_data['seats_booked']
-            if seats <= 0:
-                messages.error(request, "Invalid number of seats.")
-            elif seats > event.available_seats:
-                messages.error(request, "Not enough seats available.")
+            if seats <= event.available_seats:
+                Booking.objects.create(
+                    event=event,
+                    user=request.user,
+                    seats_booked=seats
+                )
+                messages.success(request, 'Your booking was successful!')
+                return redirect('events:event_detail', event_id=event.id)
             else:
-                Booking.objects.create(event=event, user=request.user, seats_booked=seats)
-                messages.success(request, "Your booking was successful!")
-                return redirect('events:index')
+                messages.error(request, 'Not enough seats available.')
     else:
         form = BookingForm()
 
-    return render(request, 'events/book_event.html', {'event': event, 'form': form})
+    return render(request, 'events/event_detail.html', {
+        'event': event,
+        'form': form,
+        'booking_allowed': booking_allowed
+    })
 
 @login_required
 def my_bookings(request):

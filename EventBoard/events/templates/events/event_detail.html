@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>{{ event.title }}</h2>
+  <p><strong>Date:</strong> {{ event.date }} at {{ event.time }}</p>
+  <p><strong>Location:</strong> {{ event.location }}</p>
+  <p><strong>Description:</strong> {{ event.description }}</p>
+  <p><strong>Available Seats:</strong> {{ event.available_seats }}</p>
+
+  {% if booking_allowed %}
+    <h3>Book Your Seat</h3>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Confirm Booking</button>
+    </form>
+  {% else %}
+    <p style="color:red; font-weight:bold;">Booking Unavailable</p>
+    <p>This event has already taken place. You can view your past bookings in your history.</p>
+  {% endif %}
+
+  <br>
+  <a href="{% url 'events:index' %}">Back to Events</a>
+{% endblock %}

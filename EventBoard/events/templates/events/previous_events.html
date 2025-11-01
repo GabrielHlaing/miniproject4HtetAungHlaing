@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
 <h2>Previous Events</h2>
 
@@ -17,7 +17,9 @@
   <ul>
     {% for event in events %}
       <li>
-        <strong>{{ event.title }}</strong> — {{ event.date }}
+        <a href="{% url 'events:event_detail' event.id %}">
+          <strong>{{ event.title }}</strong>
+        </a> — {{ event.date }}
       </li>
     {% endfor %}
   </ul>
