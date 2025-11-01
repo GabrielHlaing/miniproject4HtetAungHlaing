@@ -1,60 +1,98 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Feedback</h2>
-<form method="POST" id="feedback-form">
-  {% csrf_token %}
+<div class="container my-5" style="max-width: 700px;">
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      <h2 class="text-center mb-4 text-primary">Share Your Feedback</h2>
+      <form method="POST" id="feedback-form">
+        {% csrf_token %}
 
-  <div class="mb-3">
-    <label class="form-label">Rating:</label>
-    <div id="star-container">
-      {% for i in "12345" %}
-        <span class="star" data-value="{{ forloop.counter }}">&#9734;</span>
-      {% endfor %}
+        <!-- Rating Field -->
+        <div class="mb-4 text-center">
+          <label class="form-label fw-semibold d-block mb-2">Your Rating</label>
+          <div id="star-container" class="d-inline-block">
+            {% for i in "12345" %}
+              <span class="star fs-2 px-1" data-value="{{ forloop.counter }}">&#9734;</span>
+            {% endfor %}
+          </div>
+          {{ form.rating }}
+        </div>
+
+        <!-- Comment Field -->
+        <div class="mb-3">
+          <label for="{{ form.comment.id_for_label }}" class="form-label fw-semibold">Your Comment</label>
+          {{ form.comment }}
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2">Submit Feedback</button>
+      </form>
     </div>
-    {{ form.rating }}
   </div>
 
-  <div class="mb-3">
-    {{ form.comment.label_tag }}
-    {{ form.comment }}
+  <!-- Divider -->
+  <hr class="my-5">
+
+  <!-- Feedback List -->
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h3 class="mb-4 text-secondary">Previous Feedback</h3>
+      {% if feedbacks %}
+        <ul class="list-group list-group-flush">
+          {% for fb in feedbacks %}
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div>
+                <strong>{{ fb.user.username }}</strong><br>
+                <span class="text-warning">
+                  {% for i in "12345" %}
+                    {% if forloop.counter <= fb.rating %}
+                      &#9733;
+                    {% else %}
+                      &#9734;
+                    {% endif %}
+                  {% endfor %}
+                </span>
+                <p class="mt-2 mb-0 text-muted">{{ fb.comment }}</p>
+              </div>
+              <small class="text-muted">{{ fb.created_at|date:"M d, Y" }}</small>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No feedback yet. Be the first to share your thoughts!</p>
+      {% endif %}
+    </div>
   </div>
+</div>
 
-  <button type="submit">Submit Feedback</button>
-</form>
-
-<hr>
-
-<h3>Previous Feedback</h3>
-<ul>
-  {% for fb in feedbacks %}
-    <li>{{ fb.user.username }} — {{ fb.rating }}⭐: {{ fb.comment }}</li>
-  {% empty %}
-    <li>No feedback yet.</li>
-  {% endfor %}
-</ul>
-
+<!-- ⭐ Star Rating Styling -->
 <style>
   #star-container {
-    font-size: 2rem;
     color: #ccc;
     cursor: pointer;
   }
   .star.filled {
-    color: gold;
+    color: #ffc107;
+  }
+  textarea.form-control {
+    resize: none;
   }
 </style>
 
+<!-- ⭐ Star Rating Script -->
 <script>
-  const stars = document.querySelectorAll(".star");
-  const ratingInput = document.querySelector("#id_rating");
+  document.addEventListener("DOMContentLoaded", function() {
+    const stars = document.querySelectorAll(".star");
+    const ratingInput = document.querySelector("#id_rating");
 
-  stars.forEach(star => {
-    star.addEventListener("click", () => {
-      const value = star.getAttribute("data-value");
-      ratingInput.value = value;
-      stars.forEach(s => s.classList.toggle("filled", s.getAttribute("data-value") <= value));
+    stars.forEach(star => {
+      star.addEventListener("click", () => {
+        const value = parseInt(star.getAttribute("data-value"));
+        ratingInput.value = value;
+        stars.forEach(s => {
+          s.classList.toggle("filled", parseInt(s.getAttribute("data-value")) <= value);
+        });
+      });
     });
   });
 </script>
-
 {% endblock %}

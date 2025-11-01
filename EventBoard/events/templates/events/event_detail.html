@@ -1,23 +1,60 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>{{ event.title }}</h2>
-  <p><strong>Date:</strong> {{ event.date }} at {{ event.time }}</p>
-  <p><strong>Location:</strong> {{ event.location }}</p>
-  <p><strong>Description:</strong> {{ event.description }}</p>
-  <p><strong>Available Seats:</strong> {{ event.available_seats }}</p>
+    {% if messages %}
+        <div class="w-100 mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
-  {% if booking_allowed %}
-    <h3>Book Your Seat</h3>
-    <form method="POST">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Confirm Booking</button>
-    </form>
-  {% else %}
-    <p style="color:red; font-weight:bold;">Booking Unavailable</p>
-    <p>This event has already taken place. You can view your past bookings in your history.</p>
-  {% endif %}
+<div class="container my-5 d-flex justify-content-center">
 
-  <br>
-  <a href="{% url 'events:index' %}">Back to Events</a>
+  <div class="card shadow-lg p-4 border-0" style="max-width: 600px; width: 100%;">
+    <div class="card-body text-center">
+      <h2 class="card-title text-primary fw-bold mb-3">{{ event.title }}</h2>
+
+      <p class="text-muted mb-1">
+        <i class="bi bi-calendar-event"></i> <strong>{{ event.date }}</strong> at {{ event.time }}
+      </p>
+      <p class="text-muted mb-1">
+        <i class="bi bi-geo-alt"></i> <strong>Location:</strong> {{ event.location }}
+      </p>
+    <p class="text-muted mb-0">
+        <i class="bi bi-receipt"></i> <strong>Event Description:</strong></p>
+      <p class="mb-3">{{ event.description }}</p>
+
+      <p class="fw-semibold mb-3">
+        <i class="bi bi-people"></i> Available Seats:
+        <span class="text-success">{{ event.available_seats }}</span>
+      </p>
+
+      {% if booking_allowed %}
+        <div class="border-top pt-3 mt-4">
+          <h5 class="text-success mb-3">Reserve Your Spot</h5>
+          <form method="POST" class="text-start">
+            {% csrf_token %}
+            <div class="mb-3">
+              {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Confirm Booking</button>
+          </form>
+        </div>
+      {% else %}
+        <div class="border-top pt-3 mt-4">
+          <p class="text-danger fw-bold mb-1">Booking Closed</p>
+          <p class="text-muted">This event has already taken place.
+          You can find it in your <a href="{% url 'events:previous_events' %}">Previous Events</a>.</p>
+        </div>
+      {% endif %}
+
+      <div class="mt-4">
+        <a href="{% url 'events:index' %}" class="btn btn-outline-secondary w-100">← Back to Events</a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

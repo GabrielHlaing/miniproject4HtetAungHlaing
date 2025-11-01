@@ -1,48 +1,73 @@
 {% extends "base.html" %}
 {% block content %}
-  <h2>My Bookings</h2>
+<div class="container my-5" style="max-width: 900px;">
+    {% if messages %}
+        <div class="w-100 mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+  <h2 class="text-primary mb-4 text-center fw-bold">My Bookings</h2>
 
   {% if bookings %}
-    <ul>
+    <div class="row g-4">
       {% for booking in bookings %}
-        <li>
-          <strong>{{ booking.event.title }}</strong> — {{ booking.seats_booked }} seat(s)
-          <button
-            type="button"
-            class="btn btn-danger btn-sm"
-            data-bs-toggle="modal"
-            data-bs-target="#cancelModal{{ booking.id }}">
-            Cancel
-          </button>
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm border-0">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div>
+                <h5 class="card-title">{{ booking.event.title }}</h5>
+                <p class="text-muted mb-1"><strong>Date:</strong> {{ booking.event.date }}</p>
+                <p class="text-muted mb-3"><strong>Seats Booked:</strong> {{ booking.seats_booked }}</p>
+              </div>
 
-          <!-- Modal -->
-          <div class="modal fade" id="cancelModal{{ booking.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ booking.id }}" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="cancelModalLabel{{ booking.id }}">Confirm Cancellation</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+              <button
+                type="button"
+                class="btn btn-outline-danger w-100"
+                data-bs-toggle="modal"
+                data-bs-target="#cancelModal{{ booking.id }}">
+                Cancel Booking
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cancel Modal -->
+        <div class="modal fade" id="cancelModal{{ booking.id }}" tabindex="-1" aria-labelledby="cancelModalLabel{{ booking.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+              <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="cancelModalLabel{{ booking.id }}">Confirm Cancellation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>
                   Are you sure you want to cancel your booking for
-                  <strong>{{ booking.event.name }}</strong>?
-                  You booked {{ booking.seats_booked }} seat(s).
-                </div>
-                <div class="modal-footer">
-                  <form action="{% url 'events:cancel_booking' booking.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Yes, Cancel</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Go Back</button>
-                  </form>
-                </div>
+                  <strong>{{ booking.event.title }}</strong>?
+                </p>
+                <p>You booked <strong>{{ booking.seats_booked }}</strong> seat(s).</p>
+              </div>
+              <div class="modal-footer">
+                <form action="{% url 'events:cancel_booking' booking.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger">Yes, Cancel</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Go Back</button>
+                </form>
               </div>
             </div>
           </div>
-        </li>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
-    <p>You have no bookings yet.</p>
+    <div class="text-center py-5">
+      <p class="text-muted fs-5">You haven’t booked any events yet.</p>
+      <a href="{% url 'events:index' %}" class="btn btn-primary">Browse Events</a>
+    </div>
   {% endif %}
-    <p><a href="{% url 'events:index' %}">Back to Events</a></p>
+</div>
 {% endblock %}

@@ -23,7 +23,7 @@ def register(request):
     return render(request, "registration/register.html", {"form": form})
 
 def index(request):
-    events = Event.objects.all().order_by('date')
+    events = Event.objects.all().order_by('-date')
     return render(request, 'events/index.html', {'events': events})
 
 @login_required
