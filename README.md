@@ -3,62 +3,72 @@
 ### Mini Project 4
 
 # Project Title
-
-Mini Project 3: Recipe Sharing Web Application
+Mini Project 4: Event Management and Booking Web Application
 
 ## Description
+- This project is a full-stack event management and booking system built using **Django**.
+- It allows users to register, log in, view events, and book available seats.
+- Admins can add, edit, and delete events through the Django Admin panel.
+- Users can also submit feedback and manage their bookings.
 
-- This project is a full-stack recipe management web application built using **Flask**.  
-- It allows users to register, log in, create, edit, and delete their recipes.  
-- Each recipe is stored in an SQLite database and linked to its author’s profile.  
-
-The app also uses **Bootstrap** for to style as a modern and elegant interface, featuring modals for profile editing and delete confirmations, and a card-based recipe layout.
+The app uses **Bootstrap 5** for a clean and responsive interface, including modals for confirmation dialogs, styled forms, and a mobile-friendly navigation bar.
 
 ## Getting Started
 
 ### Dependencies
 * Install the required packages using:
-```commandline
+```
 pip install -r requirements.txt
 ```
 
-### Initialize Database
-* Create a database table by:
-```commandline
-flask --app Recipe init-db 
+### Database Setup
+* Create and apply database migrations using:
 ```
-### Executing the Program
+python manage.py makemigrations
+```
+```
+python manage.py migrate
+```
 
-Run the Flask app with:
-```commandline
-flask --app Recipe run
+### Create a Superuser (for Admin Access)
+* Run the following command and follow the prompts:
 ```
-* Then open your browser and visit: `http://127.0.0.1:5000/`
+python manage.py createsuperuser
+```
+
+### Running the Server
+* Start the Django development server with:
+```
+python manage.py runserver
+```
+* Then open your browser and visit:
+http://127.0.0.1:8000/
+* To access admin panel, open:
+http://127.0.0.1:8000/admin
 
 
 ## Features
-
-* User authentication (register, login, logout)
-* Create, edit, and delete recipes
-* Profile editing modal with live form updates
-* Card-based recipe listing with dark theme
-* Bootstrap modals for delete confirmations
-* SQLite database integration
-* Flash message system for success/error notifications
+* User registration, login, and logout
+* Event listing with filtering and details page
+* Seat booking system with seat availability tracking
+* Booking history with cancellation confirmation modal
+* Previous event filtering by time period
+* Feedback form with interactive star rating system
+* Django admin panel for event and user management
+* Flash message system for user feedback (success/error)
+* Responsive Bootstrap 5 design with sticky footer
 
 ## Authors
-
 * Htet Aung Hlaing
 
 ## Version History
-
-* 1.0  
-    * Complete Flask CRUD application  
-    * Dark Bootstrap UI added  
-    * Profile edit and delete modals implemented  
+* 1.0
+    * Complete Django event booking system
+    * Styled pages for events, feedback, and bookings
+    * Bootstrap 5 responsive layout integrated
 
 ## Acknowledgments
-
-* [Flask Tutorial](https://flask.palletsprojects.com/en/stable/tutorial/)
-* [Bootstrap 5](https://getbootstrap.com/)
-* [SQLite](https://www.sqlite.org/)
+* Django Documentation - https://docs.djangoproject.com/en/stable/
+* Bootstrap 5 - https://getbootstrap.com/
+* SQLite - https://www.sqlite.org/
+* MDN Django Tutorial - https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django
