@@ -23,7 +23,13 @@ def register(request):
     return render(request, "registration/register.html", {"form": form})
 
 def index(request):
+    now = timezone.now().date()
     events = Event.objects.all().order_by('-date')
+
+    # Annotate each event with an `expired` property
+    for event in events:
+        event.expired = event.date < now
+
     return render(request, 'events/index.html', {'events': events})
 
 @login_required

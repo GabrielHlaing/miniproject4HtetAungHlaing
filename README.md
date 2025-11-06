@@ -22,6 +22,12 @@ pip install -r requirements.txt
 ```
 * Set settings file location in the Django configuration. By default, it is `mysite\settings.py`
 
+### Go to the Project Directory
+* Move to the project directory by:
+```commandline
+cd EventBoard
+```
+
 ### Database Setup
 * Create and apply database migrations using:
 ```
